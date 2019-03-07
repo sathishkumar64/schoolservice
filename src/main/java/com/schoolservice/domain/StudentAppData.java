@@ -10,6 +10,8 @@ public class StudentAppData {
 
 	
 	private String studentAppInfo;	
+	
+	private String countryCode;	
 
 	private String message;
 	
@@ -39,10 +41,22 @@ public class StudentAppData {
 		this.message = message;
 	}
 
+	
+	
+	public String getCountryCode() {
+		return countryCode;
+	}
+
+	public void setCountryCode(String countryCode) {
+		this.countryCode = countryCode;
+	}
+
 	@Override
 	public String toString() {
-		return "StudentAppData [studentAppInfo=" + studentAppInfo + ", message=" + message + ", listStudent="
-				+ listStudent + "]";
+		return "StudentAppData [studentAppInfo=" + studentAppInfo + ", countryCode=" + countryCode + ", message="
+				+ message + ", listStudent=" + listStudent + "]";
 	}
+
+
 	
 }
