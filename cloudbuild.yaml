@@ -10,7 +10,7 @@ steps:
   - set
   - image
   - deployment
-  - schoolservice-v1
+  - school-deployment-v1
   - schoolservice=gcr.io/$PROJECT_ID/schoolservice:$BRANCH_NAME-$REVISION_ID
   env:
   - 'CLOUDSDK_COMPUTE_ZONE=europe-north1-a'
