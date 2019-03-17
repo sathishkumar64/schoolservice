@@ -10,8 +10,6 @@ public class StudentAppData {
 
 	private String studentAppInfo;
 
-	private String appsDeployedZone;
-
 	private String message;
 
 	private List<Student> listStudent;
@@ -40,18 +38,12 @@ public class StudentAppData {
 		this.message = message;
 	}
 
-	public String getAppsDeployedZone() {
-		return appsDeployedZone;
-	}
-
-	public void setAppsDeployedZone(String appsDeployedZone) {
-		this.appsDeployedZone = appsDeployedZone;
-	}
-
 	@Override
 	public String toString() {
-		return "StudentAppData [studentAppInfo=" + studentAppInfo + ", appsDeployedZone=" + appsDeployedZone
-				+ ", message=" + message + ", listStudent=" + listStudent + "]";
+		return "StudentAppData [studentAppInfo=" + studentAppInfo + ", message=" + message + ", listStudent="
+				+ listStudent + "]";
 	}
+
+
 
 }
