@@ -6,13 +6,17 @@ spring:
     name: schoolservice
   data:
     mongodb:
-      uri: mongodb://localhost:27017  
+      uri: mongodb://localhost:27017 
       database: schoolservice
-  activemq:
-    broker-url: tcp://localhost:61616
-    user: admin
-    password: admin  
+  #activemq:
+    #broker-url: tcp://localhost:61616
+  #  user: admin
+   # password: admin  
 
 logging:
   level:
-    com.schoolservice: INFO
+    com.schoolservice: INFO 
+  pattern:    console: "%d{yyyy-MM-dd HH:mm:ss} %-5level  - %msg%n"
+    file:    "%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n"
+  file: /logs/schoolservice.log 
+

@@ -5,13 +5,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.info.BuildProperties;
-import org.springframework.context.annotation.Bean;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,36 +18,23 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
 import com.schoolservice.domain.School;
 import com.schoolservice.domain.SchoolAppData;
-import com.schoolservice.domain.StudentAppData;
 import com.schoolservice.repositories.MongoDBSchoolRepository;
-import com.schoolservice.util.MessageConsumer;
+import com.schoolservice.repositories.RestClientService;
 
 @RestController
 @RequestMapping(path="/api")
 public class SchoolServiceController {
 	
-	Logger logger = LoggerFactory.getLogger(this.getClass());	
-		
-	@Value("${student.api.url:http://studentservice:8098/api/student}")
-    private String remoteURL;
-	
-	
-	@Autowired
-	RestTemplate restTemplate;		
-	
-	@Autowired
-	BuildProperties buildProperties;
-	
-	@Autowired
-	public MessageConsumer messageConsumer;
-	
+	Logger logger = LoggerFactory.getLogger(this.getClass());			
 
 	@Autowired
 	public MongoDBSchoolRepository mongoDBSchoolRepository;	
+	
+	@Autowired
+	public RestClientService restClientService;
 	
 		
 	@GetMapping(path="/school/all")
@@ -75,56 +57,18 @@ public class SchoolServiceController {
 	public SchoolAppData saveSchool(@RequestBody School school) {	
 			logger.info("Posting School detail ................");			
 			SchoolAppData appData=null;		
-			appData=mongoDBSchoolRepository.save(school);				
-			 String buildInfo=setBuildInfo();		
-			appData.setSchoolAppInfo(buildInfo);
-			appData.setSchoolName(school.getSchoolname());
-			appData.setMessage("School data successuflly saved.");	
+			appData=mongoDBSchoolRepository.save(school);
 		return appData;
 	}
-	
-	
 	
 
 	@RequestMapping(value = "/school/getStudentsBySchool/{schoolname}", method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
 	public SchoolAppData getStudents(@PathVariable String schoolname,@RequestHeader HttpHeaders headers) {	
-		logger.info("Reading Header Info from School Service::::::::: {}",headers);	
-		logger.info("Getting School details for {}/getStudentDetailsForSchool {}", remoteURL,schoolname);					
-		HttpEntity<?> entity = new HttpEntity(headers);						
-		SchoolAppData schoolData=findStudent(schoolname,entity,remoteURL);		
+		logger.info("Reading Header Info from School Service::::::::: {}",headers);					
+		HttpEntity<?> entity = new HttpEntity<>(headers);						
+		SchoolAppData schoolData=restClientService.findStudent(schoolname,entity);		
 		return schoolData;		
 		
-	}
-
-	
-	private String setBuildInfo(){		
-		StringBuilder builder=new StringBuilder();
-		builder.append("School Application Name :" + buildProperties.getName() +" - Version: " + buildProperties.getVersion());		
-		return builder.toString();
-	}
-
-
-	
-	
-	public SchoolAppData findStudent(String schoolName,HttpEntity<?> entity,String remoteURL) {		
-		SchoolAppData appData=new SchoolAppData();		
-		StudentAppData response = restTemplate.exchange(remoteURL+"/getStudentDetailsForSchool/{schoolname}", HttpMethod.GET, entity, new ParameterizedTypeReference<StudentAppData>() {
-		}, schoolName).getBody();	
-		logger.info("Response received from student service as {}. " , response.toString());		
-		String jmsMessage=messageConsumer.getMessage();		
-		logger.info("JMS message consumed from student service as {}. " , jmsMessage);		
-		String buildInfo=setBuildInfo();		
-		appData.setSchoolAppInfo(buildInfo);
-		appData.setSchoolName(schoolName);
-		appData.setStudentInfo(response);	
-		appData.setJmsMessage("Message read from Student Active MQueue :"+jmsMessage);
-		logger.info(appData.toString());
-		return appData;
-	}
-	
-	@Bean	
-	public RestTemplate restTemplate() {
-		return new RestTemplate();
 	}
 
 }
