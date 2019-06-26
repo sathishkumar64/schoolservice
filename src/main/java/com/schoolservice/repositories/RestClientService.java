@@ -68,7 +68,7 @@ public class RestClientService {
 
 	private String setBuildInfo(){		
 		StringBuilder builder=new StringBuilder();
-		builder.append("School Application Name :" + buildProperties.getName() +" - Version: " + buildProperties.getVersion());		
+		builder.append(buildProperties.getName() +" - Version: " + buildProperties.getVersion());		
 		return builder.toString();
 	}
 

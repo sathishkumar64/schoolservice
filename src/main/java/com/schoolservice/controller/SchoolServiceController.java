@@ -40,8 +40,7 @@ public class SchoolServiceController {
 	@GetMapping(path="/school/all")
     public @ResponseBody  List<School> retriveSchool(@RequestHeader HttpHeaders headers) {
 		logger.info("Retrieving all School Details {} with headers.....",headers);
-        List<School> schoolList = mongoDBSchoolRepository.findAll();
-        System.out.println(schoolList.size());
+        List<School> schoolList = mongoDBSchoolRepository.findAll();       
         return schoolList;
     }
 	
