@@ -53,8 +53,8 @@ public class SchoolServiceController {
 	
 	
 	@PostMapping(path="/school/create" )
-	public SchoolAppData saveSchool(@RequestBody School school) {	
-			logger.info("Posting School detail ................");			
+	public SchoolAppData saveSchool(@RequestBody School school,@RequestHeader HttpHeaders headers) {	
+			logger.info("Posting School detail {}................",headers);			
 			SchoolAppData appData=null;		
 			appData=mongoDBSchoolRepository.save(school);
 		return appData;
