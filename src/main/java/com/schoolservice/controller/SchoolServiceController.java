@@ -24,6 +24,12 @@ import com.schoolservice.domain.SchoolAppData;
 import com.schoolservice.repositories.MongoDBSchoolRepository;
 import com.schoolservice.repositories.RestClientService;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
+@Api(value="COE School -Istio Implementation", description="Operations pertaining to School Service")
 @RestController
 @RequestMapping(path="/api")
 public class SchoolServiceController {
@@ -36,7 +42,13 @@ public class SchoolServiceController {
 	@Autowired
 	public RestClientService restClientService;
 	
-		
+	@ApiOperation(value = "View a list of available school", response = Iterable.class)
+	@ApiResponses(value = {
+	        @ApiResponse(code = 200, message = "Successfully retrieved list"),
+	        @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+	        @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+	        @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
+	})	
 	@GetMapping(path="/school/all")
     public @ResponseBody  List<School> retriveSchool(@RequestHeader HttpHeaders headers) {
 		logger.info("Retrieving all School Details {} with headers.....",headers);
@@ -44,6 +56,7 @@ public class SchoolServiceController {
         return schoolList;
     }
 	
+	@ApiOperation(value = "Search a school with an School Name",response = School.class)
 	@GetMapping(path="/school")
     public @ResponseBody  School retriveSchoolByName(@RequestParam (value = "schoolname") String schoolname) {
 		logger.info("Retrieving School Details By Name {}....................",schoolname);
@@ -52,6 +65,7 @@ public class SchoolServiceController {
     }
 	
 	
+	@ApiOperation(value = "Add a new School")
 	@PostMapping(path="/school/create" )
 	public SchoolAppData saveSchool(@RequestBody School school,@RequestHeader HttpHeaders headers) {	
 			logger.info("Posting School detail {}................",headers);			
@@ -61,6 +75,7 @@ public class SchoolServiceController {
 	}
 	
 
+	@ApiOperation(value = "Search a Student List with an School Name",response = String.class)
 	@RequestMapping(value = "/school/getStudentsBySchool/{schoolname}", method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
 	public SchoolAppData getStudents(@PathVariable String schoolname,@RequestHeader HttpHeaders headers) {	
 		logger.info("Reading Header Info from School Service::::::::: {}",headers);					
