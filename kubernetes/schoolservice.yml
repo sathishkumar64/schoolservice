@@ -1,0 +1,53 @@
+##################################################################################################
+# school-service service
+##################################################################################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: schoolservice
+  #namespace:  backend 
+spec:
+  ports:
+  - port: 9098
+    name: http
+  selector:
+    app: schoolservice
+---
+#apiVersion: v1
+#kind: ServiceAccount
+#metadata:
+  #name: school-serviceaccount
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: school-deployment-v1
+  #namespace:  backend
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: schoolservice
+        version: v1
+    spec:
+      #serviceAccountName: school-serviceaccount
+      containers:
+      - name: school-container
+        image: gcr.io/sapient-si-dsst-184990/schoolservice
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 9098
+        env:
+         - name: SPRING_DATA_MONGODB_URI
+           valueFrom:
+              secretKeyRef:
+                name: mongodb-atlas-school
+                key: mongodb.uri.schools
+        
+         - name: SPRING_ACTIVEMQ_BROKER-URL
+           valueFrom:
+              secretKeyRef:               
+                 name: activemq-vm-school
+                 key: activemq.broker-url
+---

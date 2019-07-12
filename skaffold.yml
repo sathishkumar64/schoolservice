@@ -1,0 +1,25 @@
+apiVersion: skaffold/v1beta12
+kind: Config
+build:
+  artifacts:
+   - image: gcr.io/sapient-si-dsst-184990/schoolservice
+     context: ../schoolservice/
+     #jibMaven: {}
+     
+deploy:
+  kubectl:
+    manifests:   
+      - ../schoolservice/kubernetes/*
+      
+profiles:
+  - name: cloud-build
+    build:
+      googleCloudBuild:
+        projectId: sapient-si-dsst-184990     
+      
+      
+#portForward:
+ # - resourceType: deployment
+  #  resourceName: studentservice
+ #   port: 8080
+  #  localPort: 8098
