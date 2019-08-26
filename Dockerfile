@@ -3,7 +3,7 @@ MAINTAINER sathish vasu
 VOLUME /tmp
 EXPOSE 9098 9099
 
-RUN  mkdir /opt/cdbg && chmod 775 /opt/cdbg | \
+RUN mkdir /opt/cdbg && chmod 775 /opt/cdbg | \
      wget -qO- https://storage.googleapis.com/cloud-debugger/compute-java/debian-wheezy/cdbg_java_agent_gce.tar.gz | \
      tar xvz -C /opt/cdbg
 
