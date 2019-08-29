@@ -25,7 +25,7 @@ public class RestClientService {
 
 	Logger logger = LoggerFactory.getLogger(this.getClass());
 	
-	@Value("${student.api.url:http://studentservice:8098/api/student}")
+	@Value("${student.api.url}")	
     private String remoteURL;
 	
 	
