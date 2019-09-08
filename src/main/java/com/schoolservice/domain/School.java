@@ -15,6 +15,15 @@ public class School implements Serializable {
 	private String schoolname;
 	private String eduMode;
 	private Address address;
+	private float rating;
+
+	public float getRating() {
+		return rating;
+	}
+
+	public void setRating(float rating) {
+		this.rating = rating;
+	}
 
 	public String getSchoolId() {
 		return schoolId;
