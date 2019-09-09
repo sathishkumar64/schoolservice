@@ -16,6 +16,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
+import com.schoolservice.domain.Ratings;
 import com.schoolservice.domain.SchoolAppData;
 import com.schoolservice.domain.StudentAppData;
 import com.schoolservice.util.MessageConsumer;
@@ -27,7 +28,9 @@ public class RestClientService {
 	
 	@Value("${student.api.url}")	
     private String remoteURL;
-	
+		
+	@Value("${ratings.api.url}")
+    private String ratingServiceURL;
 	
 	@Autowired
 	RestTemplate restTemplate;	
@@ -70,6 +73,15 @@ public class RestClientService {
 		StringBuilder builder=new StringBuilder();
 		builder.append(buildProperties.getName() +" - Version: " + buildProperties.getVersion());		
 		return builder.toString();
+	}
+
+	
+	public float getSchoolRating(String schoolId) {
+		HttpEntity<?> entity = new HttpEntity() {};	
+		Ratings ratingsResponse  = restTemplate.exchange(ratingServiceURL +"/{schoolId}", HttpMethod.GET, entity, new ParameterizedTypeReference<Ratings>() {
+		}, schoolId).getBody();
+		logger.info("Response received from rating service as {}. " , ratingsResponse.toString());
+		return ratingsResponse.getRating();
 	}
 
 	

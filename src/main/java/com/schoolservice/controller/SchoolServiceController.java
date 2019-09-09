@@ -52,8 +52,11 @@ public class SchoolServiceController {
 	@GetMapping(path="/school/all")
     public @ResponseBody  List<School> retriveSchool(@RequestHeader HttpHeaders headers) {
 		logger.info("Retrieving all School Details {} with headers.....",headers);
-        List<School> schoolList = mongoDBSchoolRepository.findAll();       
-        return schoolList;
+        List<School> schoolList = mongoDBSchoolRepository.findAll();
+        schoolList.forEach(school -> {
+        	school.setRating(restClientService.getSchoolRating(school.getSchoolId()));
+        });
+        return schoolList;      
     }
 	
 	@ApiOperation(value = "Search a school with an School Name",response = School.class)
@@ -84,5 +87,7 @@ public class SchoolServiceController {
 		return schoolData;		
 		
 	}
+	
+	
 
 }
