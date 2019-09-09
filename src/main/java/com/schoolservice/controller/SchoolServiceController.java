@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import com.schoolservice.domain.Ratings;
 import com.schoolservice.domain.School;
 import com.schoolservice.domain.SchoolAppData;
 import com.schoolservice.domain.StudentAppData;
@@ -40,6 +41,8 @@ public class SchoolServiceController {
 	@Value("${student.api.url:http://studentservice:8098/api/student}")
     private String remoteURL;
 	
+	@Value("${ratings.api.url:http://ratingservice:8080/ratings}")
+    private String ratingServiceURL;
 	
 	@Autowired
 	RestTemplate restTemplate;		
@@ -60,6 +63,9 @@ public class SchoolServiceController {
 		logger.info("Retrieving all School Details {} with headers.....",headers);
         List<School> schoolList = mongoDBSchoolRepository.findAll();
         System.out.println(schoolList.size());
+        schoolList.forEach(school -> {
+        	school.setRating(getSchoolRating(school.getSchoolId()));
+        });
         return schoolList;
     }
 	
@@ -120,6 +126,14 @@ public class SchoolServiceController {
 		appData.setJmsMessage("Message read from Student Active MQueue :"+jmsMessage);
 		logger.info(appData.toString());
 		return appData;
+	}
+	
+	public float getSchoolRating(String schoolId) {
+		HttpEntity<?> entity = new HttpEntity() {};	
+		Ratings ratingsResponse  = restTemplate.exchange(ratingServiceURL +"/{schoolId}", HttpMethod.GET, entity, new ParameterizedTypeReference<Ratings>() {
+		}, schoolId).getBody();
+		logger.info("Response received from rating service as {}. " , ratingsResponse.toString());
+		return ratingsResponse.getRating();
 	}
 	
 	@Bean	
