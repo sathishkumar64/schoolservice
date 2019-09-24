@@ -19,7 +19,6 @@ import org.springframework.web.client.RestTemplate;
 import com.schoolservice.domain.Ratings;
 import com.schoolservice.domain.SchoolAppData;
 import com.schoolservice.domain.StudentAppData;
-import com.schoolservice.util.MessageConsumer;
 
 @Service
 public class RestClientService {
@@ -35,8 +34,8 @@ public class RestClientService {
 	@Autowired
 	RestTemplate restTemplate;	
 	
-	@Autowired
-	public MessageConsumer messageConsumer;
+	//@Autowired
+	//public MessageConsumer messageConsumer;
 	
 	@Autowired
 	BuildProperties buildProperties;
