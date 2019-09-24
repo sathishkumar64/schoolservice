@@ -56,13 +56,13 @@ public class RestClientService {
 		 } 
 		
 		logger.info("Response received from student service as {}. " , response.toString());		
-		String jmsMessage=messageConsumer.getMessage();		
-		logger.info("JMS message consumed from student service as {}. " , jmsMessage);		
+		//String jmsMessage=messageConsumer.getMessage();		
+		//logger.info("JMS message consumed from student service as {}. " , jmsMessage);		
 		String buildInfo=setBuildInfo();		
 		appData.setSchoolAppInfo(buildInfo);
 		appData.setSchoolName(schoolName);
 		appData.setStudentInfo(response);	
-		appData.setJmsMessage("Message read from Student Active MQueue :"+jmsMessage);
+	//	appData.setJmsMessage("Message read from Student Active MQueue :"+jmsMessage);
 		logger.info(appData.toString());
 		return appData;
 	}
