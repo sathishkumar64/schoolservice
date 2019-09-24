@@ -79,8 +79,7 @@ public class RestClientService {
 	public float getSchoolRating(String schoolId) {
 		HttpEntity<?> entity = new HttpEntity() {};	
 		Ratings ratingsResponse  = restTemplate.exchange(ratingServiceURL +"/{schoolId}", HttpMethod.GET, entity, new ParameterizedTypeReference<Ratings>() {
-		}, schoolId).getBody();
-		logger.info("Response received from rating service as {}. " , ratingsResponse.toString());
+		}, schoolId).getBody();		
 		return ratingsResponse.getRating();
 	}
 
